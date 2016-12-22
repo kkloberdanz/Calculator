@@ -42,6 +42,10 @@ class RPN {
                     return pow(a, b);
                     break;
 
+                case '%':
+                    return (long long)b % (long long)a;
+                    break;
+
                 default:
                     std::cerr << "error: '" << 
                         opperator << "' is not a valid opperator" 
