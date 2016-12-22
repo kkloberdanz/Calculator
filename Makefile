@@ -1,2 +1,2 @@
 all:
-	g++ rpn.cpp -o calculator
+	g++ main.cpp -o calculator
