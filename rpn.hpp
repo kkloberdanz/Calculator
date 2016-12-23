@@ -20,7 +20,7 @@ class RPN {
                     (token == "%") );
         }
 
-        double calculate(char opperator, double a, double b) {
+        long double calculate(char opperator, long double a, long double b) {
             switch (opperator) {
                 case '+':
                     return a + b;
@@ -104,12 +104,12 @@ class RPN {
                 if (not is_opperator(token)) { 
                     stk.push(token);
                 } else {
-                    double arg_a = std::stod(top());
+                    long double arg_a = std::stold(top());
                     stk.pop();
-                    double arg_b = std::stod(top());
+                    long double arg_b = std::stold(top());
                     stk.pop();
 
-                    double result = calculate(token[0], arg_a, arg_b);
+                    long double result = calculate(token[0], arg_a, arg_b);
                     stk.push(std::to_string(result));
                 }
             }

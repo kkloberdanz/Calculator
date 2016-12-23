@@ -21,7 +21,7 @@ class Infix_To_RPN {
         std::stack<char>                stk;
         std::vector<std::string>        v;
         std::queue<std::string>         q;
-        std::map<std::string, double>   const_map;
+        std::map<std::string, long double>   const_map;
         std::vector<std::string>        tokens;
 
         bool is_opperator(const char c) {
@@ -81,7 +81,7 @@ class Infix_To_RPN {
             return const_map.find(s) != const_map.end();
         }
 
-        double as_prim(std::string s) {
+        long double as_prim(std::string s) {
             // return value at key s
             return const_map.find(s)->second;
         }
@@ -99,7 +99,7 @@ class Infix_To_RPN {
                 if (v.at(i) == "let") {
                     if ((i + 3 < v.size()) && (v.at(i + 2) == "=")) {
                         std::string tok = v.at(i + 1);
-                        double val = std::stod(v.at(i + 3));
+                        long double val = std::stod(v.at(i + 3));
 
                         const_map[tok] = val;
                         return true;
