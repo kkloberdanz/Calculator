@@ -108,12 +108,16 @@ class Infix_To_RPN {
 
         bool set_lets() {
             for (size_t i = 0; i < v.size(); ++i) {
-                if (v.at(i) == "const") {
-                    std::string tok = v.at(i + 1);
-                    double val = std::stod(v.at(i + 3));
+                if (v.at(i) == "let") {
+                    if ((i + 3 < v.size()) && (v.at(i + 2) == "=")) {
+                        std::string tok = v.at(i + 1);
+                        double val = std::stod(v.at(i + 3));
 
-                    const_map[tok] = val;
-                    return true;
+                        const_map[tok] = val;
+                        return true;
+                    } else {
+                        std::cerr << "Invalid syntax" << std::endl;
+                    }
                 }
             }
             return false;
@@ -156,7 +160,7 @@ class Infix_To_RPN {
             const_map["pi"] = 3.141592653589793; 
 
             std::vector<std::string> tmp {"+", "-", "*", "/", "^", "%", "(", 
-                ")", "=", "e", "pi", "const"
+                ")", "=", "e", "pi", "let"
             };
 
             tokens = tmp;
