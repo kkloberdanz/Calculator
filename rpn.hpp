@@ -104,9 +104,11 @@ class RPN {
                 if (not is_opperator(token)) { 
                     stk.push(token);
                 } else {
-                    double arg_a = atof(top().c_str());
+                    //double arg_a = atof(top().c_str());
+                    double arg_a = std::stod(top());
                     stk.pop();
-                    double arg_b = atof(top().c_str());
+                    //double arg_b = atof(top().c_str());
+                    double arg_b = std::stod(top());
                     stk.pop();
 
                     double result = calculate(token[0], arg_a, arg_b);

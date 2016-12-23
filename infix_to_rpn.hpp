@@ -5,6 +5,10 @@
 #include <stack>
 #include <queue>
 #include <vector>
+#include <map>
+#include <algorithm>
+
+#include "tokenizer.hpp"
 
 class Infix_To_RPN {
     private:
@@ -17,6 +21,12 @@ class Infix_To_RPN {
         std::stack<char> stk;
         std::vector<std::string> v;
         std::queue<std::string> q;
+        std::map<std::string, double> const_map;
+        std::vector<std::string> tokens;
+
+        bool is_opperator(const char c) {
+            return is_opperator(std::string(1, c));
+        }
 
         bool is_opperator(std::string token) {
             return ((token == "+") ||
@@ -36,7 +46,21 @@ class Infix_To_RPN {
             return true;
         }
 
-        void build(std::string input) {
+
+        int build(std::string input) {
+#ifdef DEBUG
+            std::cout << "BULDING" << std::endl;
+#endif
+            Tokenizer t;
+
+            t.set_tokens(tokens);
+            this->v = t.tokenize(input);
+            if (std::find(v.begin(), v.end(), "FAIL") != v.end()) {
+                return -1;
+            } else {
+                return 1;
+            }
+            /*
             std::string word;
             for (const char& c : input) {
                 if (c == ' ') {
@@ -47,6 +71,31 @@ class Infix_To_RPN {
                 }
             }
             v.push_back(word);
+            */
+        }
+
+        std::string add_spaces(std::string s) {
+            std::string return_str;
+            for (const char& c : s) {
+                if ((isdigit(c)) || (c == '.')) {
+                    return_str += c;
+                } else {
+                    return_str += ' ';
+                    return_str += c;
+                    return_str += ' ';
+                }
+            }
+            return return_str;
+        }
+
+        bool is_const(std::string s) {
+            // check if s is in map
+            return const_map.find(s) != const_map.end();
+        }
+
+        double as_prim(std::string s) {
+            // return value at key s
+            return const_map.find(s)->second;
         }
 
         ASSOCIATIVITY get_associativity(char opperator) {
@@ -55,6 +104,19 @@ class Infix_To_RPN {
             } else {
                 return LEFT;
             }
+        }
+
+        bool set_lets() {
+            for (size_t i = 0; i < v.size(); ++i) {
+                if (v.at(i) == "const") {
+                    std::string tok = v.at(i + 1);
+                    double val = std::stod(v.at(i + 3));
+
+                    const_map[tok] = val;
+                    return true;
+                }
+            }
+            return false;
         }
 
         int get_precedence(char opperator) {
@@ -89,27 +151,60 @@ class Infix_To_RPN {
 
     public:
 
+        Infix_To_RPN() {
+            const_map["e"]  = 2.718281828459045;
+            const_map["pi"] = 3.141592653589793; 
+
+            std::vector<std::string> tmp {"+", "-", "*", "/", "^", "%", "(", 
+                ")", "=", "e", "pi", "const"
+            };
+
+            tokens = tmp;
+        }
+
         std::string to_rpn(std::string input) {
-            this->build(input);
-            /*
+            bool error_state = false;
+
+            //input = add_spaces(input);
+            if (build(input) == -1) {
+                return "FAIL";
+            }
+
+            if (set_lets()) {
+                return "FAIL"; 
+            }
+
+#ifdef DEBUG
+            std::cout << "Printing Tokens" << std::endl;
             for (auto item : v) {
                 std::cout << "'" << item << "'" << std::endl;
             }
-            */
+#endif
 
             for (const std::string& token : v) {
-                //std::cout << "token: '" << token << "'" << std::endl;
+#ifdef DEBUG
+                std::cout << "token: '" << token << "'" << std::endl;
+#endif
 
                 if (is_num(token)) {
-                    //std::cout << "NUMBER" << std::endl;
-                    //std::cout << "pushing: '" << token << "'" << std::endl;
+#ifdef DEBUG
+                    std::cout << "NUMBER" << std::endl;
+                    std::cout << "pushing: '" << token << "'" << std::endl;
+#endif
                     q.push(token);
 
+                } else if (is_const(token)) {
+                    q.push(std::to_string(as_prim(token)));
+
                 } else if (is_opperator(token)) {
-                    //std::cout << "OPPERATOR" << std::endl;
+#ifdef DEBUG
+                    std::cout << "OPPERATOR" << std::endl;
+#endif
                     char tok_char = token[0];
                     while (not stk.empty()) {
-                        //std::cout << "stk not empty" << std::endl;
+#ifdef DEBUG
+                        std::cout << "stk not empty" << std::endl;
+#endif
                         if (stk.top() == '(') {
                             break;
                         }
@@ -143,14 +238,20 @@ class Infix_To_RPN {
                     stk.pop();
 
                 } else {
+                    v.clear();
                     std::cerr << "Unsuported option: '" << token << "'" << std::endl;
+                    error_state = true;
                 }
 
-                //std::cout << std::endl;
+#ifdef DEBUG
+                std::cout << std::endl;
+#endif
 
             } // end for
 
-            //std::cout << "END OF STREAM" << std::endl;
+#ifdef DEBUG
+            std::cout << "END OF STREAM" << std::endl;
+#endif
             while (not stk.empty()) {
                 q.push(std::string(1, stk.top()));
                 stk.pop();
@@ -162,7 +263,11 @@ class Infix_To_RPN {
             }
 
             v.clear();
-            return result;
+            if (error_state) {
+                return "FAIL";
+            } else {
+                return result;
+            }
         }
 };
 

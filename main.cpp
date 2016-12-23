@@ -10,14 +10,18 @@ int interactive() {
     RPN r;
     while (1) {
         std::cout << "> ";
+
         getline(std::cin, line);
         if ((line == "q") || (line == "quit")) {
             return 1;
         }
-        rpn_string = itr.to_rpn(line);
-        //std::cout << "RPN: " << rpn_string << std::endl;
-        r.build(rpn_string);
-        std::cout << r.run() << std::endl;
+        if (not line.empty()) {
+            rpn_string = itr.to_rpn(line);
+            if (rpn_string != "FAIL") {
+                r.build(rpn_string);
+                std::cout << r.run() << std::endl;
+            }
+        }
     }
 }
 
