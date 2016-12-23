@@ -6,7 +6,7 @@ class Tokenizer {
         std::vector<std::string> output_v;
         std::vector<std::string> tokens;
         std::vector<std::string> reserved_symbols {
-            "(", ")", "*", "^", "+", "=", "-", "%"
+            "(", ")", "*", "^", "/", "+", "=", "-", "%"
         };
         
         bool is_token(char c) {
