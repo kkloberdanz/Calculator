@@ -18,11 +18,11 @@ class Infix_To_RPN {
             RIGHT
         } ASSOCIATIVITY;
 
-        std::stack<char> stk;
-        std::vector<std::string> v;
-        std::queue<std::string> q;
-        std::map<std::string, double> const_map;
-        std::vector<std::string> tokens;
+        std::stack<char>                stk;
+        std::vector<std::string>        v;
+        std::queue<std::string>         q;
+        std::map<std::string, double>   const_map;
+        std::vector<std::string>        tokens;
 
         bool is_opperator(const char c) {
             return is_opperator(std::string(1, c));
@@ -60,18 +60,6 @@ class Infix_To_RPN {
             } else {
                 return 1;
             }
-            /*
-            std::string word;
-            for (const char& c : input) {
-                if (c == ' ') {
-                    v.push_back(word);
-                    word = "";
-                } else {
-                    word += c;
-                }
-            }
-            v.push_back(word);
-            */
         }
 
         std::string add_spaces(std::string s) {
@@ -169,7 +157,6 @@ class Infix_To_RPN {
         std::string to_rpn(std::string input) {
             bool error_state = false;
 
-            //input = add_spaces(input);
             if (build(input) == -1) {
                 return "FAIL";
             }
@@ -274,14 +261,5 @@ class Infix_To_RPN {
             }
         }
 };
-
-/*
-int main() {
-    Infix_To_RPN inf;
-
-    std::cout << inf.to_rpn("1 + ( 4 * 7 )") << std::endl;
-    return 0;
-}
-*/
 
 #endif

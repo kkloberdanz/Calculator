@@ -69,18 +69,6 @@ class Tokenizer {
                     output_v.push_back(std::string(1, c));
                     token = "";
 
-                    /*
-                } else if ( ((c == ' ') || (is_reserved(c))) && (not isdigit(c)) ) { 
-                    if (is_reserved(token)) {
-                        output_v.push_back(token);
-                        token = "";
-
-                    } else if (c != ' ') {
-                        std::cerr << "Unknown token: '" << token << "'" << std::endl;
-                        error_state = true;
-                    } 
-
-                    */
                 } else if (c == ' ') {
                     if (not token.empty()) {
                         output_v.push_back(token);
