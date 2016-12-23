@@ -39,7 +39,7 @@ class RPN {
                     break;
 
                 case '^':
-                    return pow(a, b);
+                    return pow(b, a);
                     break;
 
                 case '%':
