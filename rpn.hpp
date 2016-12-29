@@ -11,7 +11,7 @@ class RPN {
         std::stack<std::string> stk;
         std::vector<std::string> v;
 
-        bool is_opperator(std::string token) {
+        bool is_operator(std::string token) {
             return ((token == "+") ||
                     (token == "-") ||
                     (token == "*") ||
@@ -20,8 +20,8 @@ class RPN {
                     (token == "%") );
         }
 
-        long double calculate(char opperator, long double a, long double b) {
-            switch (opperator) {
+        long double calculate(char op, long double a, long double b) {
+            switch (op) {
                 case '+':
                     return a + b;
                     break;
@@ -48,7 +48,7 @@ class RPN {
 
                 default:
                     std::cerr << "error: '" << 
-                        opperator << "' is not a valid opperator" 
+                        op << "' is not a valid operator" 
                     << std::endl;
                     exit(EXIT_FAILURE);
                     break;
@@ -101,7 +101,7 @@ class RPN {
 
         std::string run() {
             for (const std::string& token : v) {
-                if (not is_opperator(token)) { 
+                if (not is_operator(token)) { 
                     stk.push(token);
                 } else {
                     long double arg_a = std::stold(top());

@@ -18,17 +18,17 @@ class Infix_To_RPN {
             RIGHT
         } ASSOCIATIVITY;
 
-        std::stack<char>                stk;
-        std::vector<std::string>        v;
-        std::queue<std::string>         q;
+        std::stack<char>                     stk;
+        std::vector<std::string>             v;
+        std::queue<std::string>              q;
         std::map<std::string, long double>   const_map;
-        std::vector<std::string>        tokens;
+        std::vector<std::string>             tokens;
 
-        bool is_opperator(const char c) {
-            return is_opperator(std::string(1, c));
+        bool is_operator(const char c) {
+            return is_operator(std::string(1, c));
         }
 
-        bool is_opperator(std::string token) {
+        bool is_operator(std::string token) {
             return ((token == "+") ||
                     (token == "-") ||
                     (token == "*") ||
@@ -49,7 +49,7 @@ class Infix_To_RPN {
 
         int build(std::string input) {
 #ifdef DEBUG
-            std::cout << "BULDING" << std::endl;
+            std::cout << "BUILDING" << std::endl;
 #endif
             Tokenizer t;
 
@@ -62,6 +62,9 @@ class Infix_To_RPN {
             }
         }
 
+        /*
+         * Depreciated
+         */
         std::string add_spaces(std::string s) {
             std::string return_str;
             for (const char& c : s) {
@@ -86,8 +89,8 @@ class Infix_To_RPN {
             return const_map.find(s)->second;
         }
 
-        ASSOCIATIVITY get_associativity(char opperator) {
-            if (opperator == '^') {
+        ASSOCIATIVITY get_associativity(char op) {
+            if (op == '^') {
                 return RIGHT;
             } else {
                 return LEFT;
@@ -111,8 +114,8 @@ class Infix_To_RPN {
             return false;
         }
 
-        int get_precedence(char opperator) {
-            switch (opperator) {
+        int get_precedence(char op) {
+            switch (op) {
                 case '^':
                     return 4;
                     break;
@@ -134,8 +137,8 @@ class Infix_To_RPN {
                     break;
 
                 default:
-                    std::cerr << "error: No such opperator: '" 
-                        << opperator << "'" << std::endl;
+                    std::cerr << "error: No such operator: '" 
+                        << op << "'" << std::endl;
                     exit(EXIT_FAILURE);
                     break;
             }
@@ -187,9 +190,9 @@ class Infix_To_RPN {
                 } else if (is_const(token)) {
                     q.push(std::to_string(as_prim(token)));
 
-                } else if (is_opperator(token)) {
+                } else if (is_operator(token)) {
 #ifdef DEBUG
-                    std::cout << "OPPERATOR" << std::endl;
+                    std::cout << "OPERATOR" << std::endl;
 #endif
                     char tok_char = token[0];
                     while (not stk.empty()) {
@@ -206,7 +209,7 @@ class Infix_To_RPN {
                             stk.pop(); 
                             q.push(std::string(1, op2));
                         } else if ((get_associativity(tok_char) == RIGHT) && 
-                                    (get_precedence(tok_char)) < stk.top()) {
+                                   (get_precedence(tok_char)) < stk.top()) {
 
                             char op2 = stk.top();
                             stk.pop(); 
@@ -230,7 +233,8 @@ class Infix_To_RPN {
 
                 } else {
                     v.clear();
-                    std::cerr << "Unsuported option: '" << token << "'" << std::endl;
+                    std::cerr << "Unsupported option: '" << token 
+                        << "'" << std::endl;
                     error_state = true;
                 }
 
@@ -262,4 +266,4 @@ class Infix_To_RPN {
         }
 };
 
-#endif
+#endif // INFIX_TO_RPN_HPP
